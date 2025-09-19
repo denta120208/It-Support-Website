@@ -188,8 +188,10 @@ Edit Minutes Of Meeting
       const tdPic = document.createElement('td'); tdPic.textContent = attendance[p.attendance_index]?.name || ''; tr.appendChild(tdPic);
       const tdAksi = document.createElement('td');
       tdAksi.innerHTML = `
-        <button type="button" class="btn btn-sm btn-warning" onclick="editPoint(${i})">Edit</button>
-        <button type="button" class="btn btn-sm btn-danger" onclick="removePoint(${i})">Delete</button>
+        <div class="d-flex flex-column align-items-center gap-1">
+          <button type="button" class="btn btn-sm btn-warning mb-1" style="width:60px;" onclick="editPoint(${i})">Edit</button>
+          <button type="button" class="btn btn-sm btn-danger" style="width:60px;" onclick="removePoint(${i})">Delete</button>
+        </div>
       `;
       tr.appendChild(tdAksi);
       tbody.appendChild(tr);
