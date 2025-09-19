@@ -1,0 +1,345 @@
+<?php
+    use \koolreport\widgets\koolphp\Table;
+    use \koolreport\widgets\google\BarChart;
+    use \koolreport\pivot\widgets\PivotTable;
+    use \koolreport\widgets\google\ColumnChart;
+    use \koolreport\drilldown\LegacyDrillDown;
+    use \koolreport\drilldown\DrillDown;
+    use \koolreport\datagrid\DataTables;
+    use \koolreport\d3\PieChart;
+    use \koolreport\d3\ColumnChart1;
+?>
+
+<style>
+div .dt-buttons{
+    float : left;
+}
+.dataTables_length{
+    float : left;
+    padding-left: 10px;
+}
+td {
+    white-space: nowrap;
+    text-align: center;
+}
+</style>
+
+
+
+@extends('layouts.mainLayouts')
+
+@section('navbar_header')
+Ticketing - <b>{{session('current_project_char')}}</b>
+@endsection
+
+@section('header_title')
+Report Ticket Summary
+@endsection
+
+@section('content')
+
+<div class="container-xxl">
+    <div class="row justify-content-center">
+        <div class="col-md">
+            <div class="card">
+                <div class="card-body">
+                    <div style="padding-left: 5px;">
+                        @if(session()->has('success'))
+                            <div class="alert alert-success alert-block">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>{{ session()->get('success') }}</strong>
+                            </div>
+                        @endif
+                        @if(session()->has('error'))
+                            <div class="alert alert-danger alert-block">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>{{ session()->get('error') }}</strong>
+                            </div>
+                        @endif
+                        @if(session()->has('warning'))
+                            <div class="alert alert-warning alert-block">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>{{ session()->get('warning') }}</strong>
+                            </div>
+                        @endif
+                        @if(session()->has('info'))
+                            <div class="alert alert-info alert-block">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>{{ session()->get('info') }}</strong>
+                            </div>
+                        @endif
+                    </div>
+                <form action="{{ url('filterViewListReportSummary') }}" method="post">
+                    {{ csrf_field() }}
+                    <div class = row>
+                        <div class="col-2 form-group">
+                            <div class="btn-group submitter-group filter">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Cut Off</div>
+                                </div>
+                                <input type="date"  class="form-control input-xs filter"style="width: 100%;" id="cutOff" name="cutOff"/>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary form-group col-2" data-toggle="modal">Submit</button>
+                </form>
+                @if($dataReporting <> 0)
+                <div>
+                    <b>Proyek : {{strtoupper($project_name)}}</b><br />
+                    <b>Cut Off : {{strtoupper($cut_off_param)}}</b>
+                </div>
+                <br />
+                <a target="_blank" class="btn btn-danger" href="{{ URL('printReportSummary/'. $cut_off_param . '/'. $pic) }}" onclick="window.open(this.href).print(); return false">
+                    Print
+                </a>
+                <div>
+                    <a class="btn btn-success" href="{{ URL('excelReportSummary/' . $cut_off_param . '/'. $pic) }}">Export Excel</a>
+                </div>
+                    <div class="" style="padding-left: 5px;">
+                        <div class="col-md" style="overflow-x:auto;">
+                            <?php
+                                DataTables::create(array(
+                                   "name" => "reportSummary",
+                                   "dataSource"=>$report->dataStore("collection_Report_Summary_Datatable"),
+                                   "themeBase"=>"bs4",
+                                   "showFooter" => false,
+                                   "cssClass"=>array(
+                                       "table"=>"table table-striped table-bordered"
+                                   ),
+                                   "columns" => array(
+                                        "indexColumn" => [
+                                           "label" => "No",
+                                           "formatValue" => function($value, $row) {
+                                            return $value;
+                                           },
+                                           "footer" => "sum",
+                                           "footerText" => "<b>@value</b>"
+                                       ],
+                                       "NAMA" => [
+                                           "label" => "Nama",
+                                           "formatValue" => function($value, $row) {
+                                            return $value;
+                                           },
+                                           "footer" => "sum",
+                                           "footerText" => "<b>@value</b>"
+                                       ],
+                                       "OPEN" => [
+                                           "label" => "Open",
+                                           "formatValue" => function($value, $row) {
+                                            return $value;
+                                           },
+                                           "footer" => "sum",
+                                           "footerText" => "<b>@value</b>"
+                                       ],
+                                       "HOLD" => [
+                                           "label" => "Hold",
+                                           "formatValue" => function($value, $row) {
+                                                return $value;
+                                           },
+                                           "footerText" => "<b>Hold</b>"
+                                       ],
+                                       "PROGRESS" => [
+                                           "label" => "Progress",
+                                           "formatValue" => function($value, $row) {
+                                            return $value;
+                                           },
+                                           "footer" => "sum",
+                                           "footerText" => "<b>@value</b>"
+                                       ],
+                                       "CLOSE" => [
+                                           "label" => "Close",
+                                           "formatValue" => function($value, $row) {
+                                                return $value;
+                                           },
+                                           "footerText" => "<b>Close</b>"
+                                       ],
+                                       "REJECT" => [
+                                           "label" => "Reject",
+                                           "formatValue" => function($value, $row) {
+                                                return $value;
+                                           },
+                                           "footerText" => "<b>Close</b>"
+                                       ],
+                                       "JUMLAH_TICKET" => [
+                                           "label" => "Total Ticket",
+                                           "formatValue" => function($value, $row) {
+                                               return $value;
+                                           },
+                                           "footerText" => "<b>Jumlah Ticket</b>"
+                                        ],
+                                   ),
+                                    "fastRender" => true,
+                                        "options"=>array(
+                                            "scrollX" => false,
+                                            "dom" => 'Bfrtip',
+                                            "buttons" => [
+                                                'excel'
+                                            ],
+                                            "paging"=>true,
+                                            "pageLength" => 10,
+                                            "searching"=>true,
+                                            'autoWidth' => true,
+                                            "select" => false,
+                                            // "order"=>array(
+                                            //     array(0,"asc")
+                                            // )
+                                        ),
+                                        "onReady" => "function() {
+                                            reportSummary.on( 'order.dt search.dt', function () {                
+                                                reportSummary.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                                                    cell.innerHTML = i+1;
+                                                } );
+                                            } ).draw();
+                                        }",
+                                        "searchOnEnter" => false,
+                                        "searchMode" => "or"
+                                    ));
+                            ?>
+                        </div>
+                
+                <div class="col-md" style="overflow-x:auto; padding-top:2%">
+                    <p><b>Grouping</b></p>
+                    <?php
+                        DataTables::create(array(
+                           "name" => "reportSummaryGrouping",
+                           "dataSource"=>$report->dataStore("collection_Report_Summary_Grouping_Datatable"),
+                           "themeBase"=>"bs4",
+                           "showFooter" => false,
+                           "cssClass"=>array(
+                               "table"=>"table table-striped table-bordered"
+                           ),
+                           "columns" => array(
+                                "indexColumn" => [
+                                   "label" => "No",
+                                   "formatValue" => function($value, $row) {
+                                    return $value;
+                                   },
+                                   "footer" => "sum",
+                                   "footerText" => "<b>@value</b>"
+                               ],
+                               "NAMA" => [
+                                   "label" => "Nama",
+                                   "formatValue" => function($value, $row) {
+                                    return $value;
+                                   },
+                                   "footer" => "sum",
+                                   "footerText" => "<b>@value</b>"
+                               ],
+                               "OPEN" => [
+                                   "label" => "Open",
+                                   "formatValue" => function($value, $row) {
+                                    return $value;
+                                   },
+                                   "footer" => "sum",
+                                   "footerText" => "<b>@value</b>"
+                               ],
+                               "HOLD" => [
+                                   "label" => "Hold",
+                                   "formatValue" => function($value, $row) {
+                                        return $value;
+                                   },
+                                   "footerText" => "<b>Hold</b>"
+                               ],
+                               "PROGRESS" => [
+                                   "label" => "Progress",
+                                   "formatValue" => function($value, $row) {
+                                    return $value;
+                                   },
+                                   "footer" => "sum",
+                                   "footerText" => "<b>@value</b>"
+                               ],
+                               "CLOSE" => [
+                                   "label" => "Close",
+                                   "formatValue" => function($value, $row) {
+                                        return $value;
+                                   },
+                                   "footerText" => "<b>Close</b>"
+                               ],
+                               "REJECT" => [
+                                   "label" => "Reject",
+                                   "formatValue" => function($value, $row) {
+                                        return $value;
+                                   },
+                                   "footerText" => "<b>Close</b>"
+                               ],
+                               "JUMLAH_TICKET" => [
+                                   "label" => "Total Ticket",
+                                   "formatValue" => function($value, $row) {
+                                       return $value;
+                                   },
+                                   "footerText" => "<b>Jumlah Ticket</b>"
+                                ],
+                           ),
+                            "fastRender" => true,
+                                "options"=>array(
+                                    "scrollX" => false,
+                                    "dom" => 'Bfrtip',
+                                    "buttons" => [
+                                        'excel'
+                                    ],
+                                    "paging"=>true,
+                                    "pageLength" => 10,
+                                    "searching"=>true,
+                                    'autoWidth' => true,
+                                    "select" => false,
+                                    // "order"=>array(
+                                    //     array(0,"asc")
+                                    // )
+                                ),
+                                "onReady" => "function() {
+                                    reportSummaryGrouping.on( 'order.dt search.dt', function () {                
+                                        reportSummaryGrouping.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                                            cell.innerHTML = i+1;
+                                        } );
+                                    } ).draw();
+                                }",
+                                "searchOnEnter" => false,
+                                "searchMode" => "or"
+                            ));
+                        ?>
+                    @endif
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+</div>
+
+<script type="text/javascript">
+
+
+$(document).ready(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
+    
+    $("TABLE_1").DataTable({
+        "order": [[1, 'DESC']],
+        "autoheight":true, "autowidth":true,
+        "responsive": false, "lengthChange": false, "autoWidth": false,
+    }).buttons().container().adjust().draw().columns().adjust().appendTo('#TABLE_wrapper .col-md-6:eq(0)');
+
+});
+function swalReopenTicket(param1) {
+        
+        Swal.fire({
+        html: 'Anda Yakin Ingin Approve <b style="color: blue;">Data</b> ini?',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/reopenDataTicketing/" + param1;
+            }
+        });
+    }
+</script>
+
+@endsection
