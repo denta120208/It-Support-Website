@@ -42,7 +42,7 @@ Detail Minutes Of Meeting
             <thead>
               <tr>
                 <th>No</th>
-                <th>Title</th>
+                <th>Topic</th>
                 <th>Point</th>
                 <th>PIC</th>
               </tr>

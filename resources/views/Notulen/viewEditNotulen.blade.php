@@ -69,7 +69,7 @@ Edit Minutes Of Meeting
                 <option value="">Choose PIC </option>
               </select>
             </div>
-            <h5>Point Meeting Title</h5>
+            <h5>Point Meeting Topic</h5>
             <div class="form-group">
               <input type="text" class="form-control" id="point_title" placeholder="Point Meeting Title">
             </div>
@@ -85,7 +85,7 @@ Edit Minutes Of Meeting
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>Title</th>
+                    <th>Topic</th>
                     <th>Point</th>
                     <th>PIC</th>
                     <th>Aksi</th>

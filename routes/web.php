@@ -99,10 +99,12 @@ Route::get('/viewDataTypeKeluhan/{id}', 'Ticketing\masterDataController@viewData
 Route::post('/saveEditTypeKeluhan', 'Ticketing\masterDataController@saveEditTypeKeluhan')->name('saveEditTypeKeluhan');
 Route::get('/deleteDataTypeKeluhan/{id}', 'Ticketing\masterDataController@deleteDataTypeKeluhan')->name('deleteDataTypeKeluhan');
 
+
 // Notulen Rapat
-Route::get('/notulen', 'NotulenController@viewInputNotulen')->name('viewInputNotulen');
+Route::get('/notulen', 'NotulenController@listNotulen')->name('viewInputNotulen'); // halaman awal notulen = list notulen
 Route::post('/notulen/save', 'NotulenController@saveNotulen')->name('saveNotulen');
 Route::get('/notulen/list', 'NotulenController@listNotulen')->name('listNotulen');
+Route::get('/notulen/create', 'NotulenController@viewInputNotulen')->name('createNotulen'); // form input notulen
 Route::get('/notulen/{id}/edit', 'NotulenController@editNotulen')->name('editNotulen');
 Route::post('/notulen/{id}/update', 'NotulenController@updateNotulen')->name('updateNotulen');
 Route::get('/notulen/{id}', 'NotulenController@showNotulen')->name('showNotulen');

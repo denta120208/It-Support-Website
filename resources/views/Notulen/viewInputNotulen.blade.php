@@ -29,8 +29,7 @@ Minutes Of Meeting
             @endif
           </div>
 
-          <button type="button" class="btn btn-primary mb-3" id="showFormBtn">Create MOM</button>
-          <form id="form-notulen" action="{{ route('saveNotulen') }}" method="post" style="display:none;">
+          <form id="form-notulen" action="{{ route('saveNotulen') }}" method="post">
             {{ csrf_field() }}
             <div class="form-group">
               <label>Title</label>
@@ -71,7 +70,7 @@ Minutes Of Meeting
                 <option value="">Choose PIC </option>
               </select>
             </div>
-            <h5>Point Meeting Title</h5>
+            <h5>Point Meeting Topic</h5>
             <div class="form-group">
               <input type="text" class="form-control" id="point_title" placeholder="Point Meeting Title">
             </div>
@@ -87,7 +86,7 @@ Minutes Of Meeting
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>Title</th>
+                    <th>Topic</th>
                     <th>Point</th>
                     <th>PIC</th>
                   </tr>
@@ -100,43 +99,7 @@ Minutes Of Meeting
             <button type="button" class="btn btn-secondary mr-2" id="cancelFormBtn" style="float:right; margin-right:10px;">Cancel</button>
           </form>
 
-          <hr>
-          <h5 class="mt-4"></h5>
-          <table class="table table-bordered table-sm">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Document</th>
-                <th>Title</th>
-                <th>Date</th>
-                <th class="text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              @php
-                $currentUser = trim(session('first_name') . ' ' . session('last_name'));
-              @endphp
-              @foreach($rows as $i => $r)
-              <tr>
-                <td>{{ $i+1 }}</td>
-                <td>{{ $r->NOTULEN_TRANS_NOCHAR }}</td>
-                <td>{{ $r->NOTULEN_TRANS_NAME }}</td>
-                <td>{{ $r->NOTULEN_TRANS_DATETIME }}</td>
-                <td class="text-center">
-                  <a href="{{ route('showNotulen', ['id' => $r->NOTULEN_TRANS_ID]) }}" class="btn btn-sm btn-info">View</a>
-                  <a href="{{ route('printNotulen', ['id' => $r->NOTULEN_TRANS_ID]) }}" class="btn btn-sm btn-success" target="_blank">Print</a>
-                  @if($r->NOTULEN_TRANS_CREATED_BY == $currentUser)
-                    <a href="{{ route('editNotulen', ['id' => $r->NOTULEN_TRANS_ID]) }}" class="btn btn-sm btn-warning">Edit</a>
-                    <form action="{{ route('deleteNotulen', ['id' => $r->NOTULEN_TRANS_ID]) }}" method="post" style="display:inline" onsubmit="return confirm('Hapus notulen ini?')">
-                      {{ csrf_field() }}
-                      <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                    </form>
-                  @endif
-                </td>
-              </tr>
-              @endforeach
-            </tbody>
-          </table>
+          <!-- List notulen dihilangkan, hanya form input yang tampil di halaman ini -->
         </div>
       </div>
     </div>
@@ -151,18 +114,7 @@ Minutes Of Meeting
   // Inisialisasi CKEditor untuk point_desc
   CKEDITOR.replace('point_desc', {versionCheck: false});
 
-  // Toggle form visibility
-  document.getElementById('showFormBtn').addEventListener('click', function() {
-    const form = document.getElementById('form-notulen');
-    form.style.display = '';
-    this.style.display = 'none';
-  });
-
-  document.getElementById('cancelFormBtn').addEventListener('click', function() {
-    const form = document.getElementById('form-notulen');
-    form.style.display = 'none';
-    document.getElementById('showFormBtn').style.display = '';
-  });
+  // Hilangkan toggle form, form langsung tampil
 
   function refreshAttendanceUI() {
     const ul = document.getElementById('attendance_list');
@@ -246,6 +198,11 @@ Minutes Of Meeting
       const d = document.createElement('input'); d.type='hidden'; d.name=`points[${i}][desc]`; d.value=p.desc; form.appendChild(d);
       const a = document.createElement('input'); a.type='hidden'; a.name=`points[${i}][attendance_index]`; a.value=p.attendance_index; form.appendChild(a);
     });
+  });
+
+  // Cancel button: redirect ke halaman list MOM
+  document.getElementById('cancelFormBtn').addEventListener('click', function() {
+    window.location.href = '/notulen';
   });
 </script>
 @endsection
