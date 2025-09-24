@@ -2,7 +2,7 @@
 window.onload = function() {
     setTimeout(function() {
         window.print();
-    }, 450); 
+    }, 900); 
 };
 </script>
 @extends('layouts.mainLayouts')

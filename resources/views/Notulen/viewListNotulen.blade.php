@@ -37,6 +37,8 @@ Minutes Of Meeting
                   <td class="text-center">
                     <a href="{{ route('showNotulen', ['id' => $r->NOTULEN_TRANS_ID]) }}" class="btn btn-sm btn-info">View</a>
                     <a href="{{ route('printNotulen', ['id' => $r->NOTULEN_TRANS_ID]) }}" class="btn btn-sm btn-success" target="_blank">Print</a>
+                   
+
                     @php $currentUser = trim(session('first_name') . ' ' . session('last_name')); @endphp
                     @if($r->NOTULEN_TRANS_CREATED_BY == $currentUser)
                       <a href="{{ route('editNotulen', ['id' => $r->NOTULEN_TRANS_ID]) }}" class="btn btn-sm btn-warning">Edit</a>

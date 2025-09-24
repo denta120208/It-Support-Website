@@ -312,5 +312,3 @@ class NotulenController extends Controller
             ->with('details', $details);
     }
 }
-
-

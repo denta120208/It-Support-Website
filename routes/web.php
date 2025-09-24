@@ -56,6 +56,7 @@ Route::get('/excelReportSummary/{cutoff}/{pic}', 'ReportingTicket\reportingTicke
 
 // Notulen Print Preview
 Route::get('/notulen/print/{id}', 'NotulenController@printPreview')->name('printNotulen');
+Route::get('/notulen/download/{id}', 'NotulenController@downloadPdf')->name('downloadNotulenPdf');
 
 // View Report Detail
 Route::get('/viewListReportDetail', 'ReportingTicket\reportingTicketController@viewListReportDetail')->name('viewListReportDetail');
@@ -109,6 +110,7 @@ Route::get('/notulen/{id}/edit', 'NotulenController@editNotulen')->name('editNot
 Route::post('/notulen/{id}/update', 'NotulenController@updateNotulen')->name('updateNotulen');
 Route::get('/notulen/{id}', 'NotulenController@showNotulen')->name('showNotulen');
 Route::post('/notulen/{id}/delete', 'NotulenController@deleteNotulen')->name('deleteNotulen');
+
 
 
 //Route::get('/login', 'App\Http\Controllers\Auth\LoginController@login')->name('login');
