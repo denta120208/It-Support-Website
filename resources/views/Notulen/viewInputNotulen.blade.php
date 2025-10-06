@@ -125,7 +125,18 @@ Minutes Of Meeting
       let displayText = a.name || '';
       if (a.job_level) displayText += ' - ' + a.job_level;
       if (a.email) displayText += ' - ' + a.email;
-      li.textContent = displayText;
+      // Tambahkan tombol hapus
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn btn-danger btn-sm';
+      delBtn.textContent = 'Hapus';
+      delBtn.style.marginLeft = '10px';
+      delBtn.onclick = function() {
+        removeAttendance(idx);
+      };
+      const span = document.createElement('span');
+      span.textContent = displayText;
+      li.appendChild(span);
+      li.appendChild(delBtn);
       ul.appendChild(li);
     });
 
@@ -139,6 +150,19 @@ Minutes Of Meeting
       pic.appendChild(opt);
     });
     if (current !== '' && current < attendance.length) pic.value = current;
+  }
+
+  function removeAttendance(idx) {
+    // Hapus attendance pada index idx
+    attendance.splice(idx, 1);
+    // Juga update points yang refer ke attendance_index
+    points = points.filter(p => p.attendance_index !== idx);
+    // Update attendance_index pada points yang lebih besar dari idx
+    points.forEach(p => {
+      if (p.attendance_index > idx) p.attendance_index--;
+    });
+    refreshAttendanceUI();
+    refreshPointsUI();
   }
 
   function addAttendance() {
